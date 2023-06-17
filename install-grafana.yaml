@@ -1,0 +1,14 @@
+- hosts: all
+  gather_facts: yes
+  become: true
+  tasks:
+
+    - name: Install grafana using docker
+      community.docker.docker_container:
+        name: grafana
+        image: grafana/grafana
+        ports:
+          - 3000:3000
+        volumes:
+          - grafana-data:/var/lib/grafana
+        restart_policy: unless-stopped

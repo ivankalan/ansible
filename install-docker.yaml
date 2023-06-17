@@ -1,0 +1,44 @@
+- hosts: all
+  gather_facts: yes
+  become: true
+  tasks:
+
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - software-properties-common
+        state: latest
+        update_cache: yes
+
+    - name: Add docker gpg key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+
+    - name: Add docker repo
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+
+    - name: Install docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: latest
+        update_cache: yes
+
+    - name: Add user permission
+      shell: "usermod -aG docker $USER"
+
+    - name: Install pip
+      apt:
+        name: python3-pip
+
+    - name: Install docker sdk for python
+      pip:
+        name: docker    
